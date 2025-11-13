@@ -1,2 +1,2 @@
-# lean-azure-landing-zone
-AVM-orientated Custom Landingzone Implementation
+# lean-azure-landing-zone-template
+AVM-orientated Custom Landingzone Opensource Implementation
