@@ -1,0 +1,225 @@
+locals {
+  location = "germanywestcentral"
+}module "naming" {
+  source      = "../../helpers/wf-naming"
+  type        = "compact"
+  abbr        = "st"
+  rootid      = var.app
+  environment = var.env
+  index       = var.st_index
+}
+
+resource "azurerm_storage_account" "this" {
+  name                            = module.naming.name
+  resource_group_name             = var.resource_group_name
+  location                        = local.location
+  account_tier                    = var.account_tier
+  account_replication_type        = var.account_replication_type
+  account_kind                    = var.account_kind
+  access_tier                     = var.access_tier
+  min_tls_version                 = var.min_tls_version
+  public_network_access_enabled   = var.public_network_access_enabled
+  allow_nested_items_to_be_public = var.allow_nested_items_to_be_public
+
+  blob_properties {
+    last_access_time_enabled = var.last_access_time_enabled
+  }
+  network_rules {
+    default_action = var.default_action
+    bypass         = var.bypass
+    ip_rules       = var.ip_rules
+  }
+
+  tags = var.resource_tags_default
+}
+
+# Create containers if specified
+resource "azurerm_storage_container" "this" {
+  for_each           = var.containers
+  name               = each.key
+  storage_account_id = azurerm_storage_account.this.id
+  container_access_type = (
+    each.value.public_access != null ?
+    lower(each.value.public_access) :
+    "private"
+  )
+}
+
+module "diagnostics" {
+  source                     = "../../helpers/wf-diagnostics"
+  resource_type              = "storage"
+  resource_name              = azurerm_storage_account.this.name
+  target_resource_id         = "${azurerm_storage_account.this.id}/blobServices/default"
+  log_analytics_workspace_id = var.log_analytics_workspace_id
+}
+
+module "diagnostics_file" {
+  source                     = "../../helpers/wf-diagnostics"
+  resource_type              = "storage"
+  resource_name              = "${azurerm_storage_account.this.name}-file"
+  target_resource_id         = "${azurerm_storage_account.this.id}/fileServices/default"
+  log_analytics_workspace_id = var.log_analytics_workspace_id
+}output "storage_account_id" {
+  description = "ID of the storage account"
+  value       = azurerm_storage_account.this.id
+}
+
+output "storage_account_name" {
+  description = "Name of the storage account"
+  value       = azurerm_storage_account.this.name
+}
+
+output "container_names" {
+  description = "List of container names created"
+  value       = keys(var.containers)
+}
+
+terraform {
+  required_version = ">= 1.13.0"
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = ">= 4.0.0"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = ">= 3.0.0"
+    }
+  }
+}
+variable "app" {
+  type        = string
+  description = "Workload root id, e.g. lmx"
+}
+variable "env" {
+  type        = string
+  description = "Environment identifier, e.g. dev, stg, prd"
+}
+variable "st_index" {
+  type        = string
+  description = "Index to allow multiple storage accounts per workload (0 for first)"
+  default     = "001"
+}
+
+variable "resource_group_name" {
+  type        = string
+  description = "Name of the resource group to deploy the storage account into"
+}
+
+variable "log_analytics_workspace_id" {
+  type        = string
+  description = "Log Analytics workspace ID for diagnostics"
+}
+
+variable "account_tier" {
+  type        = string
+  description = "Storage account tier: Standard or Premium"
+  default     = "Standard"
+  validation {
+    condition     = contains(["Standard", "Premium"], var.account_tier)
+    error_message = "account_tier must be Standard or Premium"
+  }
+}
+
+variable "account_replication_type" {
+  type        = string
+  description = "Storage account replication type"
+  default     = "LRS"
+  validation {
+    condition     = contains(["LRS", "GRS", "RAGRS", "ZRS", "GZRS", "RAGZRS"], var.account_replication_type)
+    error_message = "account_replication_type must be one of: LRS, GRS, RAGRS, ZRS, GZRS, RAGZRS"
+  }
+}
+
+variable "account_kind" {
+  type        = string
+  description = "Kind of the storage account"
+  default     = "StorageV2"
+  validation {
+    condition     = contains(["Storage", "StorageV2", "BlobStorage", "BlockBlobStorage", "FileStorage"], var.account_kind)
+    error_message = "Invalid account_kind"
+  }
+}
+
+variable "access_tier" {
+  type        = string
+  description = "Access tier: Hot or Cool"
+  default     = "Hot"
+  validation {
+    condition     = contains(["Hot", "Cool"], var.access_tier)
+    error_message = "access_tier must be Hot or Cool"
+  }
+}
+
+variable "min_tls_version" {
+  type        = string
+  description = "Minimum TLS version (TLS1_2 only supported)"
+  default     = "TLS1_2"
+  validation {
+    condition     = var.min_tls_version == "TLS1_2"
+    error_message = "Only TLS1_2 is supported"
+  }
+}
+
+variable "public_network_access_enabled" {
+  type        = bool
+  description = "Enable public network access to storage account"
+  default     = false
+}
+
+variable "allow_nested_items_to_be_public" {
+  type        = bool
+  description = "Allow nested items to opt into public access"
+  default     = false
+}
+
+variable "default_action" {
+  type        = string
+  description = "Default network rule action (Allow or Deny)"
+  default     = "Deny"
+  validation {
+    condition     = contains(["Allow", "Deny"], var.default_action)
+    error_message = "default_action must be Allow or Deny"
+  }
+}
+
+variable "bypass" {
+  type        = list(string)
+  description = "Bypass settings list (Logging, Metrics, AzureServices, or None)"
+  default     = ["Metrics", "Logging", "AzureServices"]
+  validation {
+    condition = alltrue([
+      for b in var.bypass : contains(["Logging", "Metrics", "AzureServices", "None"], b)
+    ])
+    error_message = "bypass values must be one of Logging, Metrics, AzureServices, None"
+  }
+}
+
+variable "ip_rules" {
+  type        = list(string)
+  description = "List of IPv4 rules (CIDR) allowed"
+  default     = []
+}
+
+# Containers to create: map(name => optional settings)
+# e.g. { "data" = { public_access = "None" }, "logs" = {} }
+variable "containers" {
+  type = map(object({
+    public_access = optional(string) # "None", "Blob", "Container"
+  }))
+  default = {}
+}
+
+variable "resource_tags_default" {
+  type        = map(string)
+  description = "Default tags to apply to the storage account"
+  default     = {}
+}
+
+
+# Optional last access tracking
+variable "last_access_time_enabled" {
+  type        = bool
+  description = "Enable last access time tracking for blobs"
+  default     = false
+}
