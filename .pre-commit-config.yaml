@@ -26,9 +26,9 @@ repos:
         language: system
         pass_filenames: false
 
-      - id: terraform-docs-a-platform-hub
-        name: terraform-docs (a-platform-hub)
-        entry: terraform-docs markdown table --output-file README.md terraform/deployments/a-platform-hub
+      - id: terraform-docs-a-platform-net
+        name: terraform-docs (a-platform-net)
+        entry: terraform-docs markdown table --output-file README.md terraform/deployments/a-platform-net
         language: system
         pass_filenames: false
 

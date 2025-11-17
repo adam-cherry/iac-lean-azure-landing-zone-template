@@ -8,7 +8,7 @@ locals {
 
   # Standard Tags
   resource_tags_default = {
-    company = "acompany"
+    company              = "acompany"
     created-by           = "Adam Kirschstein"
     managed-by-terraform = "true"
     project              = "aproject"

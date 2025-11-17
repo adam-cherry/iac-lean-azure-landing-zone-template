@@ -26,7 +26,7 @@ locals {
     level2 = {
       workloads = {
         app1 = "app1"
-        app2  = "app2"
+        app2 = "app2"
       }
     }
   }
