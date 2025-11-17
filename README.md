@@ -9,15 +9,30 @@ This is an **Infrastructure-as-Code (IaC)** framework for building secure, scala
 Unlike the complex standard **Azure Verified Modules (AVM) Landing Zone**, this project provides:
 
 ✅ **Lightweight & Modular** – Easy to understand, customize, and extend
+
 ✅ **Open-Source** – Full transparency, community-driven, and MIT-licensed
+
 ✅ **Flexible** – Drop in your own Root/Sub/Tenant IDs with minimal configuration
+
 ✅ **Composable Modules** – Three-tier strategy (helpers → wrappers → compositions)
+
 ✅ **Security-by-Default** – Private endpoints, managed identities, and diagnostics baked in
+
 ✅ **Production-Ready** – CI/CD pipelines, state management, and quality gates included
 
-👉 For application-level architecture and usage, please refer to the official [app1 Documentation](https://internal.example.com) (*internal link*).
-
 ---
+## Target Infrastructure 
+
+**See the Target Infrastructure Architecture:** [Target_Infrastructure.drawio](./docs/Target_Infrastructure.drawio) ([PNG Preview](./docs/Target_Infrastructure.drawio.png))
+<img width="4929" height="4059" alt="Target_Infrastructure drawio" src="https://github.com/user-attachments/assets/58639ebf-9ee2-495b-8986-018ebe04df2e" />
+
+Systemdesign Core Principles 
+1. Fast time-to-value – simple initial setup, quick onboarding.
+2. Strong guardrails – security and governance enforced centrally, not ad hoc.
+3. Reduced operational overhead – teams focus on applications, not infrastructure.
+4. Scalability – design can grow without re-architecture.
+5. Reproducibility – deterministic deployments across environments.
+
 
 ## 🛣️ Project Roadmap & Status
 
@@ -46,11 +61,8 @@ This project is **actively under development**. Here's what's planned:
 - [ ] Composition modules for complete landing zone stacks
 - [ ] Advanced security modules (Azure Sentinel, Azure Firewall policies)
 - [ ] Cost optimization dashboards
-- [ ] Multi-region deployment patterns
 - [ ] Disaster recovery & failover automation
 - [ ] Enhanced documentation & video tutorials
-
-**See the Target Infrastructure Architecture:** [Target_Infrastructure.drawio](./docs/Target_Infrastructure.drawio) ([PNG Preview](./docs/Target_Infrastructure.drawio.png))
 
 ---
 
@@ -488,10 +500,10 @@ For questions, issues, or feedback related to this IaC repository:
 
 ---
 
-## 🙏 Acknowledgments
+## 🙏 Acknowledgments & Sources
 
 Built with best practices from:
 - [Azure Cloud Adoption Framework (CAF)](https://learn.microsoft.com/azure/cloud-adoption-framework/)
 - [Azure Verified Modules (AVM)](https://github.com/Azure/terraform-azurerm-avm)
-- Community feedback and real-world deployments
-
+- [Azure Architecture Center](https://learn.microsoft.com/en-us/azure/architecture/)
+- [AVM – ALZ Core Modul (Registry)](https://registry.terraform.io/modules/Azure/avm-ptn-alz/azurerm/latest)
