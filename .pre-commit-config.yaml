@@ -1,0 +1,39 @@
+repos:
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.74.1
+    hooks:
+      - id: terraform_fmt
+      - id: terraform_tflint
+      - id: terraform_tfsec
+
+  - repo: local
+    hooks:
+      - id: terraform-docs-a-bootstrap
+        name: terraform-docs (a-bootstrap)
+        entry: terraform-docs markdown table --output-file README.md terraform/deployments/a-iac-bootstrap-local
+        language: system
+        pass_filenames: false
+
+      - id: terraform-docs-a-platform-gov
+        name: terraform-docs (a-platform-gov)
+        entry: terraform-docs markdown table --output-file README.md terraform/deployments/a-platform-gov
+        language: system
+        pass_filenames: false
+
+      - id: terraform-docs-a-platform-mgmt
+        name: terraform-docs (a-platform-mgmt)
+        entry: terraform-docs markdown table --output-file README.md terraform/deployments/a-platform-mgmt
+        language: system
+        pass_filenames: false
+
+      - id: terraform-docs-a-platform-net
+        name: terraform-docs (a-platform-net)
+        entry: terraform-docs markdown table --output-file README.md terraform/deployments/a-platform-net
+        language: system
+        pass_filenames: false
+
+      - id: terraform-docs-a-poc
+        name: terraform-docs (a-poc)
+        entry: terraform-docs markdown table --output-file README.md terraform/deployments/a-poc
+        language: system
+        pass_filenames: false

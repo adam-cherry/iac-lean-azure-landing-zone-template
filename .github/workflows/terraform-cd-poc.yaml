@@ -1,0 +1,21 @@
+name: Terraform CD - PoC
+
+on:
+  push:
+    branches:
+      - main
+      #- feature/** # optional for testing
+    paths:
+      - "terraform/deployments/a-poc/**"
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    uses: ./.github/workflows/terraform-cd-template.yaml
+    with:
+      deploy_path: terraform/deployments/a-poc
+      environment: a-poc
+    secrets: inherit

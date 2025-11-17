@@ -35,3 +35,17 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+## Ignore TMP Data
+tmp/
+**/tmp/
+
+# macOS resource forks and metadata files
+._*
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Agents 
+CLAUDE.md 
+.claude/

@@ -1,0 +1,20 @@
+name: Terraform CD - Gov
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "terraform/deployments/a-platform-gov/**"
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    uses: ./.github/workflows/terraform-cd-template.yaml
+    with:
+      deploy_path: terraform/deployments/a-platform-gov
+      environment: a-platform-gov
+    secrets: inherit
