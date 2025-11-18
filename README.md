@@ -92,10 +92,6 @@ This project is **actively under development**. Here's what's planned:
 
 ---
 
-Module Strategy Description:
-
----
-
 ## ⚙️ Terraform Module Structure
 
 The acompany IaC repository follows a **three-tier module strategy** for clarity, reusability, and security-by-default:
@@ -438,14 +434,6 @@ module "diagnostics" {
 
 ---
 
-## 📚 Additional Documentation
-
-- **CLAUDE.md** – Extended developer guidance for working with this repository
-- **Deployment READMEs** – Each deployment (`terraform/deployments/*/README.md`) includes auto-generated Terraform documentation
-- **Quality Framework** – [Internal Quality Management](https://internal.example.com) documentation (*internal link*)
-
----
-
 ## ⚠️ Important Notes
 
 - **No Local State:** Never commit `.terraform/` or local state files to version control
@@ -469,7 +457,6 @@ This is an **open-source project**, and we welcome contributions from the commun
 
 ### Contribution Guidelines
 
-- Follow the [CLAUDE.md](./CLAUDE.md) project conventions
 - Ensure all modules are **idempotent** and include **diagnostics**
 - Add CAF-compliant naming and tagging
 - Include tests and documentation for new features
@@ -493,7 +480,6 @@ This project is licensed under the **MIT License** – see [LICENSE](./LICENSE) 
 
 For questions, issues, or feedback related to this IaC repository:
 
-- **Internal Documentation:** Refer to the [app1 Documentation](https://internal.example.com) and [Quality Framework](https://internal.example.com)
 - **GitHub Issues:** Create an issue in this repository for bug reports and feature requests
 - **Discussions:** Start a GitHub Discussion for architectural questions and ideas
 - **Code Review:** All changes require peer review via pull request before merging to `main`
